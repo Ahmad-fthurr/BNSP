@@ -1,55 +1,66 @@
-import './App.css'
-import Header from './Components/Header/Header'
-import Footer from './Components/Footer/Footer'
-import Customer from './Components/Customer/Customer'
-// import Profile from './profile'
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import Kategori from "./pages/Kategori/Kategori";
+import DashboardLayout from "./pages/DashboardLayout/DashboardLayout";
+import AddKategori from "./pages/Kategori/AddKategori";
+import Produk from "./pages/Produk/Produk";
+import Pesanan from "./pages/Pesanan/Pesanan";
+import Pelanggan from "./pages/Pelanggan/Pelanggan";
+import Kartu from "./pages/Kartu/Kartu";
+import Users from "./pages/Users/Users";
+import History from "./pages/History/History";
 
-
-//  function versi terbaru 
+//  function versi terbaru
 function App() {
-
   // di tempat ini untuk buat logika jangan di dalam return
   const a = 10;
   const b = 20;
   console.log(a + b);
-  
- 
+
   return (
     <>
-     <Header/> 
+      <Routes>
+        <Route path="/" element={<h1>Hello word</h1>} />
 
-    <h1>To-do List: &rarr; &#9728; </h1>
-    <ol>
-      <li>&clubs;  Mengerjakan tugas front-end</li>    
-      <li>&spades; Mempelajari tutorial react js</li>
-      <li>&diams; Murojaah</li>
-    </ol>   
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route element={<h1>Dashboard</h1>} />
 
-     {/* <Profile nama = "Ahmad" alamat={"Kalimantan Barat"} umur = "20"/>
-    <Profile nama = "Raa" alamat={"Kalimantan Barat"} umur = "20"/>  */}
-    {/* profile dua yaitu bisa memanggil 2 kali dengan nama dan lain lain yang berbeda  */}
-    
-    <img src="https://picsum.photos/200/300" alt="gambar" />
-    { <Footer nama = "Farsa"/> }
-            
-            <h2>Our Customer</h2>
-            <Customer nama={"Ucup"} alamat={"Depok"} membership={"Premium"}/>
+          {/* Pesanan */}
+          <Route path="/dashboard/pesanan" element={<Pesanan />} />
 
-         
+          {/* Produk */}
+          <Route path="/dashboard/produk" element={<Produk />} />
+          <Route path="/dashboard/produk/add" element={<AddKategori />} />
+          <Route path="/dashboard/produk/edit" element={<h1>Edit Produk</h1>} />
 
-         <Customer nama={"Joko"} alamat={"Jakarta"} membership={"Gold"}/>
-          
-      
-          <Customer nama={"Agus"} alamat={"Bandung"} membership={"Platinum"}/>
+          {/* Jenis Produk */}
+          <Route path="/dashboard/kategori" element={<Kategori />} />
+          <Route path="/dashboard/kategori/add" element={<AddKategori />} />
 
+          {/* Pelanggan */}
+          <Route path="/dashboard/pelanggan" element={<Pelanggan />} />
 
+          {/* Kartu */}
+          <Route path="/dashboard/kartu" element={<Kartu />} />
 
-     
+          {/* Users */}
+          <Route path="/dashboard/users" element={<Users />} />
+
+          {/* History */}
+          <Route path="/dashboard/history" element={<History />} />
+        </Route>
+      </Routes>
+      {/* <h1>To-do List: &rarr; &#9728; </h1>
+      <ol>
+        <li>&clubs; Mengerjakan tugas front-end</li>
+        <li>&spades; Mempelajari tutorial react js</li>
+        <li>&diams; Murojaah</li>
+      </ol> */}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
 
 //  Ini versi yang terlama Class
 
@@ -63,4 +74,3 @@ export default App
 //     )
 //   }
 // }
-

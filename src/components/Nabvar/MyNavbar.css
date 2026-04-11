@@ -1,0 +1,35 @@
+.navbar-container {
+  display: flex;
+  background-color: white;
+  padding: 12px 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-box {
+  position: relative;
+  width: 320px;
+}
+
+.icon-search {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 15px 10px 40px;
+  font-size: 14px;
+  border: 1.5px solid #dcdcdc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-box input:focus {
+  border-color: #008cc8;
+}

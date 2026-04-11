@@ -1,0 +1,33 @@
+.sidebar-content {
+  padding: 20px 0;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px 30px 20px;
+}
+
+.sidebar-content ul {
+  list-style: none;
+  padding: 0 15px;
+}
+
+.sidebar-content a {
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #0076a9; 
+  font-weight: 500;
+  border-radius: 12px;
+  margin-bottom: 5px;
+  transition: 0.3s;
+}
+
+
+.sidebar-content a.active {
+  background-color: #008cc8;
+  color: white !important;
+}
+
