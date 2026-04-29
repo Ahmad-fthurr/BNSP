@@ -1,76 +1,64 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import Kategori from "./pages/Kategori/Kategori";
 import DashboardLayout from "./pages/DashboardLayout/DashboardLayout";
 import AddKategori from "./pages/Kategori/AddKategori";
 import Produk from "./pages/Produk/Produk";
+import AddProduk from "./pages/Produk/AddProduk";
 import Pesanan from "./pages/Pesanan/Pesanan";
 import Pelanggan from "./pages/Pelanggan/Pelanggan";
-import Kartu from "./pages/Kartu/Kartu";
-import Users from "./pages/Users/Users";
-import History from "./pages/History/History";
 
-//  function versi terbaru
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Orders from "./pages/Orders";
+import EditProduk from "./pages/Produk/EditProduk";
+import CheckoutSelesai from "./pages/Checkout/CheckoutSelesai";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
-  // di tempat ini untuk buat logika jangan di dalam return
-  const a = 10;
-  const b = 20;
-  console.log(a + b);
-
   return (
     <>
       <Routes>
-        <Route path="/" element={<h1>Hello word</h1>} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route element={<h1>Dashboard</h1>} />
+          <Route index element={<Home />} />
 
-          {/* Pesanan */}
-          <Route path="/dashboard/pesanan" element={<Pesanan />} />
+          <Route path="pesanan-saya" element={<Orders />} />
 
-          {/* Produk */}
-          <Route path="/dashboard/produk" element={<Produk />} />
-          <Route path="/dashboard/produk/add" element={<AddKategori />} />
-          <Route path="/dashboard/produk/edit" element={<h1>Edit Produk</h1>} />
+          <Route path="produk" element={<Produk />} />
+          <Route path="produk/add" element={<AddProduk />} />
+          <Route path="produk/edit/:id" element={<EditProduk />} />
 
-          {/* Jenis Produk */}
-          <Route path="/dashboard/kategori" element={<Kategori />} />
-          <Route path="/dashboard/kategori/add" element={<AddKategori />} />
+          <Route path="kategori" element={<Kategori />} />
+          <Route path="kategori/add" element={<AddKategori />} />
 
-          {/* Pelanggan */}
-          <Route path="/dashboard/pelanggan" element={<Pelanggan />} />
+          <Route path="pelanggan" element={<Pelanggan />} />
 
-          {/* Kartu */}
-          <Route path="/dashboard/kartu" element={<Kartu />} />
-
-          {/* Users */}
-          <Route path="/dashboard/users" element={<Users />} />
-
-          {/* History */}
-          <Route path="/dashboard/history" element={<History />} />
+          <Route path="pesanan" element={<Pesanan />} />
+          <Route path="checkout-selesai" element={<CheckoutSelesai />} />
         </Route>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
-      {/* <h1>To-do List: &rarr; &#9728; </h1>
-      <ol>
-        <li>&clubs; Mengerjakan tugas front-end</li>
-        <li>&spades; Mempelajari tutorial react js</li>
-        <li>&diams; Murojaah</li>
-      </ol> */}
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+      />
     </>
   );
 }
 
 export default App;
-
-//  Ini versi yang terlama Class
-
-// class Footer extends Component {
-//   render() {
-//     return(
-//       <footer>
-//         <h3>Copyright &copy;2026 Developed by Ahmad fathurrahman Ramdhani &#10003; </h3>
-//         <span>Make with &#10084; &#128152; &#9733;</span>
-//       </footer>
-//     )
-//   }
-// }

@@ -1,150 +1,166 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect } from "react";
-import { useState } from "react";
-import { NavLink, useOutletContext } from "react-router-dom";
-import "react-loading-skeleton/dist/skeleton.css";
-import "./Kategori.css";
-import LogoPetik from "../../assets/petik.jpeg";
+import { Link } from "react-router-dom";
 
 const Kategori = () => {
-  const [categories, setcategories] = useState([]);
-  const [currentpage, setCurrentPage] = useState(1);
-  const { search } = useOutletContext();
-  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const API_URL = "https://fathur.petik.or.id/api";
 
   useEffect(() => {
-    getProductCategories();
+    fetchCategories();
   }, []);
 
-  const getProductCategories = async () => {
+  const fetchCategories = async () => {
     setLoading(true);
     try {
-      const result = await axios.get(
-        `${import.meta.env.VITE_API_URL}/jenis-produk`,
-      );
-
-      setcategories(result.data.data);
+      const res = await axios.get(`${API_URL}/kategori`);
+      setCategories(res.data);
     } catch (error) {
-      console.log(error);
+      console.log("Error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredData = categories.filter((category) => {
-    return category.nama?.toLowerCase().includes(search.toLowerCase());
-  });
-
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
-
-  // digunakan untuk memilah di satu halaman ada 10 data
-  const paginatedData = filteredData.slice(
-    (currentpage - 1) * ITEMS_PER_PAGE,
-    currentpage * ITEMS_PER_PAGE,
-  );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search]);
-
-  const handleDelete = async (uuid) => {
-    const msg = window.confirm("Yakin ingin menghapus Kategori ini?");
-    if (!msg) return;
-    try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/jenis-produk/${uuid}`,
-      );
-      getProductCategories();
-    } catch (error) {
-      console.log(error);
+  const handleDelete = async (id) => {
+    if (window.confirm("Yakin ingin menghapus kategori ini?")) {
+      try {
+        await axios.delete(`${API_URL}/kategori/${id}`);
+        fetchCategories();
+      } catch (error) {
+        alert("Gagal menghapus kategori");
+      }
     }
   };
-  return (
-    <div>
-      <div className="kategori-top-bar">
-        <div className="kategori-header">
-          <h3>Daftar Kategori</h3>
-        </div>
 
-        <div className="action-group">
-          <img src={LogoPetik} alt="logo" className="logo-above-btn" />
-          <NavLink to="/dashboard/kategori/add" className="btn-add">Tambah Kategori</NavLink>
+  return (
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <div>
+          <h2 style={styles.title}>Manajemen Kategori</h2>
+          <p style={styles.subtitle}>Atur kategori produk toko Anda</p>
         </div>
+        <Link to="/dashboard/kategori/add" className="btn btn-primary">
+          + Tambah Kategori
+        </Link>
       </div>
 
-      <div className="table-wrapper">
-        <table>
+      <div style={styles.tableWrapper}>
+        <table style={styles.table}>
           <thead>
             <tr>
-              <th>No</th>
-              <th>Nama</th>
-              <th>Gambar</th>
-              <th>Aksi</th>
+              <th style={styles.th}>No</th>
+              <th style={styles.th}>Nama Kategori</th>
+              <th style={styles.th}>Jumlah Produk</th>
+              <th style={styles.th}>Dibuat Pada</th>
+              <th style={styles.th}>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {loading
-              ? Array.from({ length: 5 }).map((_, i) => (
-                  <tr key={i}>
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <td key={i}>
-                        <skeleton />
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              : paginatedData.map((category, index) => (
-                  <tr key={index}>
-                    <td>{(currentpage - 1) * ITEMS_PER_PAGE + 1 + index}</td>
-                    <td>{category.nama}</td>
-                    <td>
-                      <img src={category.url} alt="gambar" width={120} />
-                    </td>
-                    <td>
-                      <button className="btn-edit" >Edit</button>
-                      <button className="btn-delete" onClick={() => handleDelete(category.uuid)}>
-                        Delete
+            {loading ? (
+              <tr><td colSpan="5" style={styles.tdCenter}>Memuat data...</td></tr>
+            ) : categories.length > 0 ? (
+              categories.map((cat, index) => (
+                <tr key={cat.id} style={styles.tr}>
+                  <td style={styles.td}>{index + 1}</td>
+                  <td style={styles.td}>
+                    <div style={styles.categoryInfo}>
+                      <span style={styles.catName}>{cat.nama_kategori}</span>
+                    </div>
+                  </td>
+                  <td style={styles.td}>-</td>
+                  <td style={styles.td}>{new Date(cat.createdAt).toLocaleDateString("id-ID")}</td>
+                  <td style={styles.td}>
+                    <div style={styles.actions}>
+                      <button className="btn btn-outline" style={styles.actionBtn}>Edit</button>
+                      <button 
+                        className="btn btn-outline" 
+                        style={{...styles.actionBtn, color: "#dc2626"}}
+                        onClick={() => handleDelete(cat.id)}
+                      >
+                        Hapus
                       </button>
-                    </td>
-                  </tr>
-                ))}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colSpan="5" style={styles.tdCenter}>Tidak ada kategori.</td></tr>
+            )}
           </tbody>
         </table>
       </div>
-      {/* PAGINATION */}
-      {/* CurrentPage */}
-      {/* totalPages */}
-      {totalPages > 1 && (
-        <div className="pagination">
-          <button
-            className="btn-page"
-            disabled={currentpage === 1}
-            onClick={() => setCurrentPage((p) => p - 1)}
-          >
-            &laquo; Prev
-          </button>
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <button
-              className="btn-page"
-              disabled={currentpage === i + 1}
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="btn-page"
-            disabled={currentpage === totalPages}
-            onClick={() => setCurrentPage((p) => p + 1)}
-          >
-            &raquo; Next
-          </button>
-        </div>
-      )}
     </div>
   );
 };
 
+const styles = {
+  container: {
+    padding: "1rem 0",
+  },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "2rem",
+  },
+  title: {
+    fontSize: "1.5rem",
+    fontWeight: 700,
+    color: "var(--text-main)",
+  },
+  subtitle: {
+    color: "var(--text-muted)",
+    fontSize: "0.875rem",
+  },
+  tableWrapper: {
+    backgroundColor: "var(--surface)",
+    borderRadius: "var(--radius-md)",
+    boxShadow: "var(--shadow-sm)",
+    border: "1px solid var(--border)",
+    overflow: "hidden",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    textAlign: "left",
+  },
+  th: {
+    padding: "1rem 1.5rem",
+    backgroundColor: "#f8fafc",
+    fontSize: "0.75rem",
+    fontWeight: 600,
+    textTransform: "uppercase",
+    color: "var(--text-muted)",
+    borderBottom: "1px solid var(--border)",
+  },
+  td: {
+    padding: "1rem 1.5rem",
+    fontSize: "0.875rem",
+    borderBottom: "1px solid var(--border)",
+  },
+  tdCenter: {
+    padding: "3rem",
+    textAlign: "center",
+    color: "var(--text-muted)",
+  },
+  tr: {
+    transition: "background-color 0.2s ease",
+  },
+  categoryInfo: {
+    fontWeight: 500,
+  },
+  actions: {
+    display: "flex",
+    gap: "0.5rem",
+  },
+  actionBtn: {
+    padding: "0.25rem 0.5rem",
+    fontSize: "0.75rem",
+  },
+};
+
 export default Kategori;
+
